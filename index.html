@@ -1,0 +1,767 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TOGETHER | Personal Life Dashboard</title>
+
+    <meta name="description" content="A shared personal finance and lifestyle management dashboard.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- JavaScript -->
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+
+    <div class="app-container">
+
+        <!-- SIDEBAR -->
+
+        <aside class="sidebar" id="sidebar">
+
+            <div class="brand">
+                <h2>TOGETHER <span>♥</span></h2>
+                <p>YOUR LIFE, IN BALANCE</p>
+            </div>
+
+            <nav class="navigation">
+
+                <p class="nav-heading">MAIN MENU</p>
+
+                <button class="nav-item active" data-view="dashboard">
+                    <span>▦</span> Dashboard
+                </button>
+
+                <button class="nav-item" data-view="together">
+                    <span>♡</span> Together Savings
+                </button>
+
+                <p class="nav-heading">PERSONAL ACCOUNTS</p>
+
+                <button class="nav-item" data-view="mr-account">
+                    <span>◉</span> Mr. Account
+                </button>
+
+                <button class="nav-item" data-view="mrs-account">
+                    <span>◉</span> Mrs. Account
+                </button>
+
+                <p class="nav-heading">REPORTS</p>
+
+                <button class="nav-item" data-view="analytics">
+                    <span>▥</span> Analytics
+                </button>
+
+                <p class="nav-heading">PREFERENCES</p>
+
+                <button class="nav-item" data-view="settings">
+                    <span>⚙</span> Settings
+                </button>
+
+            </nav>
+
+            <div class="sidebar-footer">
+                <p>Made with ♥</p>
+                <small>Our little journey together.</small>
+            </div>
+
+        </aside>
+
+
+        <!-- MAIN CONTENT -->
+
+        <main class="main-content">
+
+            <!-- TOP HEADER -->
+
+            <header class="topbar">
+
+                <div class="topbar-left">
+
+                    <button id="menu-toggle" class="icon-button"
+                        aria-label="Toggle navigation">
+                        ☰
+                    </button>
+
+                    <div>
+                        <h3 id="page-title">Dashboard</h3>
+                        <p id="current-date">Loading date...</p>
+                    </div>
+
+                </div>
+
+                <div class="topbar-right">
+
+                    <button id="theme-toggle" class="icon-button"
+                        aria-label="Change theme">
+                        ◐
+                    </button>
+
+                    <div class="profile">
+                        <span class="profile-avatar">♥</span>
+                        <span>Our Space</span>
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <!-- ================================= -->
+            <!-- DASHBOARD -->
+            <!-- ================================= -->
+
+            <section class="page-view active" id="dashboard">
+
+                <div class="welcome-section">
+
+                    <div>
+                        <p class="eyebrow">YOUR PERSONAL SPACE</p>
+                        <h1>Welcome to Together <span>♥</span></h1>
+                        <p>Let's make today productive and meaningful.</p>
+                    </div>
+
+                </div>
+
+
+                <!-- BALANCE CARDS -->
+
+                <div class="balance-grid">
+
+                    <article class="balance-card mr-card">
+
+                        <p>MR. BALANCE</p>
+
+                        <h2 class="balance-amount"
+                            data-balance="mr">
+                            ₹0.00
+                        </h2>
+
+                        <button class="balance-visibility"
+                            data-toggle-balance="mr">
+                            Hide Balance
+                        </button>
+
+                    </article>
+
+
+                    <article class="balance-card mrs-card">
+
+                        <p>MRS. BALANCE</p>
+
+                        <h2 class="balance-amount"
+                            data-balance="mrs">
+                            ₹0.00
+                        </h2>
+
+                        <button class="balance-visibility"
+                            data-toggle-balance="mrs">
+                            Hide Balance
+                        </button>
+
+                    </article>
+
+
+                    <article class="balance-card together-card">
+
+                        <p>TOGETHER BALANCE ♥</p>
+
+                        <h2 class="balance-amount"
+                            data-balance="together">
+                            ₹0.00
+                        </h2>
+
+                        <small>Our combined savings</small>
+
+                    </article>
+
+                </div>
+
+
+                <!-- OVERVIEW CARDS -->
+
+                <div class="overview-grid">
+
+                    <article class="overview-card">
+                        <p>Today's Expenses</p>
+                        <h3 id="today-expenses">₹0</h3>
+                    </article>
+
+                    <article class="overview-card">
+                        <p>Total Savings</p>
+                        <h3 id="total-savings">₹0</h3>
+                    </article>
+
+                </div>
+
+
+                <!-- FINANCIAL OVERVIEW CHART -->
+
+                <div class="dashboard-grid">
+
+                    <article class="content-card chart-card">
+
+                        <div class="card-header">
+
+                            <div>
+                                <h3>Financial Overview</h3>
+                                <p>Your savings and expenses</p>
+                            </div>
+
+                            <select id="overview-period">
+                                <option value="7">Last 7 Days</option>
+                                <option value="30">Last 30 Days</option>
+                                <option value="365">This Year</option>
+                            </select>
+
+                        </div>
+
+                        <div class="chart-container">
+                            <canvas id="financial-chart"></canvas>
+                        </div>
+
+                    </article>
+
+                </div>
+
+
+                <!-- RECENT TRANSACTIONS -->
+
+                <article class="content-card">
+
+                    <div class="card-header">
+
+                        <div>
+                            <h3>Recent Transactions</h3>
+                            <p>Your latest financial activities</p>
+                        </div>
+
+                        <button class="text-button"
+                            data-view-target="analytics">
+                            View Analytics
+                        </button>
+
+                    </div>
+
+                    <div id="recent-transactions">
+                        <p>No transactions available.</p>
+                    </div>
+
+                </article>
+
+            </section>
+
+
+            <!-- ================================= -->
+            <!-- TOGETHER SAVINGS -->
+            <!-- ================================= -->
+
+            <section class="page-view" id="together">
+
+                <div class="section-heading">
+
+                    <p class="eyebrow">OUR FINANCIAL JOURNEY</p>
+
+                    <h1>Together Savings ♥</h1>
+
+                    <p>Small savings, big dreams.</p>
+
+                </div>
+
+
+                <!-- SAVINGS OVERVIEW -->
+
+                <div class="overview-grid">
+
+                    <article class="overview-card">
+                        <p>Mr. Contributions</p>
+                        <h3 id="mr-contributions">₹0</h3>
+                    </article>
+
+                    <article class="overview-card">
+                        <p>Mrs. Contributions</p>
+                        <h3 id="mrs-contributions">₹0</h3>
+                    </article>
+
+                    <article class="overview-card">
+                        <p>Total Withdrawals</p>
+                        <h3 id="together-withdrawals">₹0</h3>
+                    </article>
+
+                    <article class="overview-card">
+                        <p>Available Savings</p>
+                        <h3 id="available-savings">₹0</h3>
+                    </article>
+
+                </div>
+
+
+                <!-- DAILY SAVINGS -->
+
+                <article class="content-card savings-card">
+
+                    <div class="card-header">
+
+                        <div>
+                            <h3>Daily Savings Challenge ♥</h3>
+                            <p>Our repeating 10-day savings cycle</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="savings-info">
+
+                        <div>
+                            <span>Started On</span>
+                            <h3>27 October 2026</h3>
+                        </div>
+
+                        <div>
+                            <span>Today's Cycle Day</span>
+                            <h3 id="cycle-day">-- / 10</h3>
+                        </div>
+
+                        <div>
+                            <span>Today's Target</span>
+                            <h3 id="daily-target">₹0</h3>
+                        </div>
+
+                    </div>
+
+
+                    <!-- CONTRIBUTION CHECK-IN -->
+
+                    <div class="contribution-box">
+
+                        <h3>Today's Check-in</h3>
+
+                        <div class="contribution-row">
+
+                            <label>
+                                <input type="checkbox"
+                                    id="mr-contribution">
+                                Mr. Contribution
+                            </label>
+
+                            <span id="mr-target">₹0</span>
+
+                        </div>
+
+
+                        <div class="contribution-row">
+
+                            <label>
+                                <input type="checkbox"
+                                    id="mrs-contribution">
+                                Mrs. Contribution
+                            </label>
+
+                            <span id="mrs-target">₹0</span>
+
+                        </div>
+
+                        <p id="contribution-status">
+                            Waiting for contributions.
+                        </p>
+
+                    </div>
+
+
+                    <!-- SAVINGS HISTORY -->
+
+                    <div class="card-header">
+                        <h3>Savings History</h3>
+                    </div>
+
+                    <div id="savings-history">
+                        <!-- Daily savings records appear here -->
+                    </div>
+
+                </article>
+
+
+                <!-- TOGETHER CASH FLOW -->
+
+                <article class="content-card">
+
+                    <div class="card-header">
+
+                        <div>
+                            <h3>Together Cash Flow</h3>
+                            <p>Where our shared money goes</p>
+                        </div>
+
+                        <button class="primary-button"
+                            id="add-together-transaction">
+                            + Add Transaction
+                        </button>
+
+                    </div>
+
+                    <div id="together-transactions">
+                        No shared transactions yet.
+                    </div>
+
+                </article>
+
+            </section>
+
+
+            <!-- ================================= -->
+            <!-- MR ACCOUNT -->
+            <!-- ================================= -->
+
+            <section class="page-view" id="mr-account">
+
+                <div class="section-heading">
+                    <h1>Mr. Account</h1>
+                    <p>Your personal financial space.</p>
+                </div>
+
+
+                <!-- MR BALANCE OVERVIEW -->
+
+                <div class="overview-grid">
+
+                    <article class="overview-card">
+
+                        <p>Cash in Hand</p>
+
+                        <h3 id="mr-cash">₹0</h3>
+
+                        <button class="text-button"
+                            id="mr-add-cash"
+                            type="button">
+                            + Add Money
+                        </button>
+
+                    </article>
+
+
+                    <article class="overview-card">
+
+                        <p>Online Balance</p>
+
+                        <h3 id="mr-online">₹0</h3>
+
+                        <button class="text-button"
+                            id="mr-add-online"
+                            type="button">
+                            + Add Money
+                        </button>
+
+                    </article>
+
+
+                    <article class="overview-card">
+
+                        <p>Total Balance</p>
+
+                        <h3 id="mr-total">₹0</h3>
+
+                    </article>
+
+                </div>
+
+
+                <!-- MR TRANSACTIONS -->
+
+                <article class="content-card">
+
+                    <div class="card-header">
+
+                        <h3>Personal Transactions</h3>
+
+                        <button class="primary-button"
+                            id="mr-add-transaction">
+                            + Add Transaction
+                        </button>
+
+                    </div>
+
+                    <div id="mr-transactions">
+                        No transactions available.
+                    </div>
+
+                </article>
+
+            </section>
+
+
+            <!-- ================================= -->
+            <!-- MRS ACCOUNT -->
+            <!-- ================================= -->
+
+            <section class="page-view" id="mrs-account">
+
+                <div class="section-heading">
+                    <h1>Mrs. Account</h1>
+                    <p>Your personal financial space.</p>
+                </div>
+
+
+                <!-- MRS BALANCE OVERVIEW -->
+
+                <div class="overview-grid">
+
+                    <article class="overview-card">
+
+                        <p>Cash in Hand</p>
+
+                        <h3 id="mrs-cash">₹0</h3>
+
+                        <button class="text-button"
+                            id="mrs-add-cash"
+                            type="button">
+                            + Add Money
+                        </button>
+
+                    </article>
+
+
+                    <article class="overview-card">
+
+                        <p>Online Balance</p>
+
+                        <h3 id="mrs-online">₹0</h3>
+
+                        <button class="text-button"
+                            id="mrs-add-online"
+                            type="button">
+                            + Add Money
+                        </button>
+
+                    </article>
+
+
+                    <article class="overview-card">
+
+                        <p>Total Balance</p>
+
+                        <h3 id="mrs-total">₹0</h3>
+
+                    </article>
+
+                </div>
+
+
+                <!-- MRS TRANSACTIONS -->
+
+                <article class="content-card">
+
+                    <div class="card-header">
+
+                        <h3>Personal Transactions</h3>
+
+                        <button class="primary-button"
+                            id="mrs-add-transaction">
+                            + Add Transaction
+                        </button>
+
+                    </div>
+
+                    <div id="mrs-transactions">
+                        No transactions available.
+                    </div>
+
+                </article>
+
+            </section>
+
+
+            <!-- ================================= -->
+            <!-- ANALYTICS -->
+            <!-- ================================= -->
+
+            <section class="page-view" id="analytics">
+
+                <div class="section-heading">
+
+                    <p class="eyebrow">YOUR FINANCIAL INSIGHTS</p>
+
+                    <h1>Analytics & Reports</h1>
+
+                    <p>Understand your savings, balances and expenses.</p>
+
+                </div>
+
+
+                <!-- SAVINGS GROWTH -->
+
+                <article class="content-card chart-card">
+
+                    <div class="card-header">
+                        <div>
+                            <h3>Savings Growth</h3>
+                            <p>Track your combined savings over time.</p>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <canvas id="savings-chart"></canvas>
+                    </div>
+
+                </article>
+
+
+                <!-- INCOME VS EXPENSES -->
+
+                <article class="content-card chart-card">
+
+                    <div class="card-header">
+                        <div>
+                            <h3>Income vs Expenses</h3>
+                            <p>Compare money added and money spent.</p>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <canvas id="expense-chart"></canvas>
+                    </div>
+
+                </article>
+
+
+                <!-- PERSONAL BALANCE OVERVIEW -->
+
+                <article class="content-card chart-card">
+
+                    <div class="card-header">
+                        <div>
+                            <h3>Personal Balance Overview</h3>
+                            <p>Compare Mr. and Mrs. account balances.</p>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <canvas id="balance-chart"></canvas>
+                    </div>
+
+                </article>
+
+            </section>
+
+
+            <!-- ================================= -->
+            <!-- SETTINGS -->
+            <!-- ================================= -->
+
+            <section class="page-view" id="settings">
+
+                <div class="section-heading">
+                    <h1>Settings</h1>
+                    <p>Manage your application preferences.</p>
+                </div>
+
+
+                <!-- APPEARANCE -->
+
+                <article class="content-card">
+
+                    <h3>Appearance</h3>
+
+                    <label for="theme-select">
+                        Application Theme
+                    </label>
+
+                    <select id="theme-select">
+                        <option value="system">System Default</option>
+                        <option value="dark">Dark Mode</option>
+                        <option value="light">Light Mode</option>
+                    </select>
+
+                </article>
+
+
+                <!-- ACCOUNT SETTINGS -->
+
+                <article class="content-card">
+
+                    <h3>Account Settings</h3>
+
+                    <p>Manage your personal and shared accounts.</p>
+
+                    <button id="logout-button">
+                        Sign Out
+                    </button>
+
+                </article>
+
+            </section>
+
+
+            <!-- ================================= -->
+            <!-- MOBILE NAVIGATION -->
+            <!-- ================================= -->
+
+            <nav class="mobile-navigation">
+
+                <button data-view="dashboard"
+                    class="mobile-nav-item active">
+
+                    <span>▦</span>
+                    <small>Home</small>
+
+                </button>
+
+
+                <button data-view="together"
+                    class="mobile-nav-item">
+
+                    <span>♡</span>
+                    <small>Together</small>
+
+                </button>
+
+
+                <button data-view="mr-account"
+                    class="mobile-nav-item">
+
+                    <span>◉</span>
+                    <small>Mr.</small>
+
+                </button>
+
+
+                <button data-view="mrs-account"
+                    class="mobile-nav-item">
+
+                    <span>◉</span>
+                    <small>Mrs.</small>
+
+                </button>
+
+
+                <button data-view="analytics"
+                    class="mobile-nav-item">
+
+                    <span>▥</span>
+                    <small>Reports</small>
+
+                </button>
+
+            </nav>
+
+        </main>
+
+    </div>
+
+</body>
+
+</html>
